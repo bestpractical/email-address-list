@@ -1,0 +1,47 @@
+NAME
+    Email::Address::List - RFC close address list parsing
+
+DESCRIPTION
+    Parser for From, To, Cc, Bcc, Reply-To, Sender and previouse prefixed
+    with Resent- prefix (eg Resent-From).
+
+REASONING
+    Email::Address is good at parsing addresses out of text and this module
+    uses regexpes from the module to parse addresses.
+
+       mailbox         =   name-addr / addr-spec
+       name-addr       =   [display-name] angle-addr
+       angle-addr      =   [CFWS] "<" addr-spec ">" [CFWS] / obs-angle-addr
+       display-name    =   phrase
+
+       from            =   "From:" mailbox-list CRLF
+       sender          =   "Sender:" mailbox CRLF
+       reply-to        =   "Reply-To:" address-list CRLF
+
+       to              =   "To:" address-list CRLF
+       cc              =   "Cc:" address-list CRLF
+       bcc             =   "Bcc:" [address-list / CFWS] CRLF
+
+       resent-from     =   "Resent-From:" mailbox-list CRLF
+       resent-sender   =   "Resent-Sender:" mailbox CRLF
+       resent-to       =   "Resent-To:" address-list CRLF
+       resent-cc       =   "Resent-Cc:" address-list CRLF
+       resent-bcc      =   "Resent-Bcc:" [address-list / CFWS] CRLF
+
+       obs-from        =   "From" *WSP ":" mailbox-list CRLF
+       obs-sender      =   "Sender" *WSP ":" mailbox CRLF
+       obs-reply-to    =   "Reply-To" *WSP ":" address-list CRLF
+
+       obs-to          =   "To" *WSP ":" address-list CRLF
+       obs-cc          =   "Cc" *WSP ":" address-list CRLF
+       obs-bcc         =   "Bcc" *WSP ":" (address-list / (*([CFWS] ",") [CFWS])) CRLF
+
+       obs-resent-from =   "Resent-From" *WSP ":" mailbox-list CRLF
+       obs-resent-send =   "Resent-Sender" *WSP ":" mailbox CRLF
+       obs-resent-date =   "Resent-Date" *WSP ":" date-time CRLF
+       obs-resent-to   =   "Resent-To" *WSP ":" address-list CRLF
+       obs-resent-cc   =   "Resent-Cc" *WSP ":" address-list CRLF
+       obs-resent-bcc  =   "Resent-Bcc" *WSP ":" (address-list / (*([CFWS] ",") [CFWS])) CRLF
+       obs-resent-mid  =   "Resent-Message-ID" *WSP ":" msg-id CRLF
+       obs-resent-rply =   "Resent-Reply-To" *WSP ":" address-list CRLF
+

@@ -1,0 +1,16 @@
+# Appendix A.6.1.  Obsolete Addressing
+Joe Q. Public <john.q.public@example.com>
+
+# Appendix A.6.1.  Obsolete Addressing
+Mary Smith <@node.test:mary@example.net>
+
+# Appendix A.6.1.  Obsolete Addressing
+jdoe@test  . example
+
+# Appendix A.6.3.  Obsolete White Space and Comments
+John Doe <jdoe@machine(comment).  example>
+
+# Appendix A.6.3.  Obsolete White Space and Comments
+Mary Smith
+  
+             <mary@example.net>
