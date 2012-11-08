@@ -109,6 +109,6 @@
       "mailbox" : "Foo B. Baz <fbaz@x.example.com>",
       "comments" : [],
       "description" : "display-name with obs-phrase (with dots)",
-      "display-name" : "Foo B Baz"
+      "display-name" : "Foo B. Baz"
    }
 ]

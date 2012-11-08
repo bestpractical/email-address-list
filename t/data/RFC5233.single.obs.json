@@ -1,0 +1,26 @@
+[
+   {
+      "domain" : "example.com",
+      "address" : "john.q.public@example.com",
+      "mailbox" : "Joe Q. Public <john.q.public@example.com>",
+      "comments" : [],
+      "description" : "Appendix A.6.1.  Obsolete Addressing",
+      "display-name" : "Joe Q. Public"
+   },
+   {
+      "domain" : "example.net",
+      "address" : "mary@example.net",
+      "mailbox" : "Mary Smith <@node.test:mary@example.net>",
+      "comments" : [],
+      "description" : "Appendix A.6.1.  Obsolete Addressing",
+      "display-name" : "Mary Smith"
+   },
+   {
+      "domain" : "example.net",
+      "address" : "mary@example.net",
+      "mailbox" : "Mary Smith\n  \n             <mary@example.net>",
+      "comments" : [],
+      "description" : "Appendix A.6.3.  Obsolete White Space and Comments",
+      "display-name" : "Mary Smith"
+   }
+]

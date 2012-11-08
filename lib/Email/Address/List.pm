@@ -17,7 +17,7 @@ previous prefixed with Resent- (eg Resent-From) headers.
 =head1 REASONING
 
 L<Email::Address> is good at parsing addresses out of any text
-even mentioned headers and this module uses mailbox regexp
+even mentioned headers and this module is derived work
 from Email::Address.
 
 =cut
@@ -123,13 +123,20 @@ $CRE{'addr_spec'}     = qr/
     ($RE{'cfws'}*)
     \@$CRE{'domain'}
 /x;
-$RE{'angle_addr'}     = qr/$RE{'cfws'}*<$RE{'addr_spec'}>$RE{'cfws'}*/;
+$RE{'obs-route'}      = qr/
+    (?:$RE{'cfws'}|,)*
+    \@$RE{'domain'}
+    (?:,$RE{'cfws'}?(?:\@$RE{'domain'})?)*
+    :
+/x;
+$RE{'angle_addr'}     = qr/$RE{'cfws'}* < $RE{'obs-route'}? $RE{'addr_spec'} > $RE{'cfws'}*/x;
+
 $RE{'name_addr'}      = qr/$RE{'display_name'}?$RE{'angle_addr'}/;
 $RE{'mailbox'}        = qr/(?:$RE{'name_addr'}|$RE{'addr_spec'})$RE{'comment'}*/;
 
 $CRE{'mailbox'} = qr/
     (?:
-        ($RE{'display_name'})?($RE{'cfws'}*)<($RE{'addr_spec'})>($RE{'cfws'}*)
+        ($RE{'display_name'})?($RE{'cfws'}*)< $RE{'obs-route'}? ($RE{'addr_spec'})>($RE{'cfws'}*)
         |($RE{'addr_spec'})
     )($RE{'comment'}*)
 /x;
@@ -182,10 +189,9 @@ sub parse {
 
         # if we got here then something unknown on our way
         # try to recorver
-        if ( $line =~ s/^(.+?)\s*(?=(;)|($RE{'display_name'}:)|,|$RE{'mailbox'}|$)//o ) {
+        if ( $line =~ s/^(.+?)\s*(?=(;)|,|$)//o ) {
             push @res, { type => 'unknown', value => $1 };
             if ($2) { $in_group = 1 }
-            if ($3) { $in_group = 0 }
         }
     }
     return @res;
@@ -206,14 +212,11 @@ sub _process_mailbox {
             $phrase .= ' ' if $lcomment =~ /^\s|\s$/ && $phrase !~ /\s$/;
             push @comments, $lcomment;
             if (defined $text) {
-                my @tmp = $text =~ /$CRE{'atom'}/go;
-                while ( my ($lcomment, $text, $rcomment) = splice @tmp, 0, 3 ) {
-                    $phrase .= ' ' if $lcomment =~ /^\s|\s$/ && $phrase !~ /\s$/;
-                    push @comments, $lcomment;
-                    $phrase .= $text;
-                    $phrase .= ' ' if $rcomment =~ /^\s|\s$/ && $phrase !~ /\s$/;
-                    push @comments, $rcomment;
-                }
+                $text =~ s{($RE{'comment'})}{
+                    push @comments, $1; $comments[-1]=~ /^\s|\s$/? ' ':''
+                }xgeo;
+                $text =~ s/\s+/ /g;
+                $phrase .= $text;
             } else {
                 $quoted =~ s/\\(.)/$1/g;
                 $phrase .= $quoted;
