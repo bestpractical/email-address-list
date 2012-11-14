@@ -37,6 +37,8 @@ sub process_file {
         $res{'display-name'} = $display_name;
         $res{'address'} = "$local_part\@$domain";
         $res{'domain'} = $domain;
+        $res{'local-part'} = $local_part;
+        $res{'local-part'} =~ s/\\(.)/$1/g if $res{'local-part'} =~ s/^"(.*)"$/$1/;
         $res{'comments'} = \@comments;
         push @list, \%res;
     }

@@ -35,4 +35,12 @@ John <jdoe@one.test> (my dear friend)
 "()<>[]:;@\\,.\"" <foo@bar.biz>
 
 # comments with spaces in every possible possition
-(c1)foo (c2) bar (c3) < (c4) baz (c5) @ (c6) domain.com (c7) >
+ (c1) foo (c2) bar (c3) < (c4) baz (c5) @ (c6) domain.com (c7) >
+
+# phrase with strange quoting
+foo "\\" bar <foo@bar.info>
+
+# local part with redundant quoting
+"foo.bar"@zoo.info
+
+
