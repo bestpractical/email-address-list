@@ -31,10 +31,8 @@ Chris Jones <c@(Chris's host.)public.example>
 # Appendix A.1.2.  Different Types of Mailboxes
 John <jdoe@one.test> (my dear friend)
 
-
 # special in display-name with quoting
 "()<>[]:;@\\,.\"" <foo@bar.biz>
 
-# display-name with obs-phrase (with dots)
-Foo B. Baz <fbaz@x.example.com>
-
+# comments with spaces in every possible possition
+(c1)foo (c2) bar (c3) < (c4) baz (c5) @ (c6) domain.com (c7) >

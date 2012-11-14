@@ -25,8 +25,10 @@ sub process_file {
 
         my @parse;
         unless ( @parse = ($mailbox =~ /^($CRE{'mailbox'})$/) ) {
-            warn "Failed to parse $mailbox";
-            next;
+            unless ( @parse = ($mailbox =~ /^($CRE{'obs-mailbox'})$/) ) {
+                warn "Failed to parse $mailbox";
+                next;
+            }
         }
 
         my (undef, $display_name, $local_part, $domain, @comments)

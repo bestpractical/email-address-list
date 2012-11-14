@@ -14,3 +14,6 @@ John Doe <jdoe@machine(comment).  example>
 Mary Smith
   
              <mary@example.net>
+
+# comments all over the place
+(c1) foo (c2) bar (c3) < (c4) baz (c5) . (c6) zoo (c7) @ (c8) domain (c9) . (c10) com (c11) >

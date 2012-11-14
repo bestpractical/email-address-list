@@ -104,11 +104,19 @@
       "display-name" : "()<>[]:;@\\,.\""
    },
    {
-      "domain" : "x.example.com",
-      "address" : "fbaz@x.example.com",
-      "mailbox" : "Foo B. Baz <fbaz@x.example.com>",
-      "comments" : [],
-      "description" : "display-name with obs-phrase (with dots)",
-      "display-name" : "Foo B. Baz"
+      "domain" : "domain.com",
+      "address" : "baz@domain.com",
+      "mailbox" : "(c1)foo (c2) bar (c3) < (c4) baz (c5) @ (c6) domain.com (c7) >\n",
+      "comments" : [
+         "(c1)",
+         "(c2)",
+         "(c3)",
+         "(c4)",
+         "(c5)",
+         "(c6)",
+         "(c7)"
+      ],
+      "description" : "comments with spaces in every possible possition",
+      "display-name" : "foo bar"
    }
 ]

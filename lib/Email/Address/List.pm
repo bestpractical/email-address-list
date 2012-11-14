@@ -71,6 +71,7 @@ $RE{'quoted_pair'}    = qr/\\$RE{'text'}/;
 $RE{'atext'}          = qr/[^$RE{'CTL'}$RE{'special'}\s]/;
 $RE{'ctext'}          = qr/(?>[^()\\]+)/;
 $RE{'qtext'}          = qr/[^\\"]/;
+$RE{'dtext'}          = qr/[^\[\]\\]/;
 
 ($RE{'ccontent'}, $RE{'comment'}) = (q{})x2;
 for (1 .. $COMMENT_NEST_LEVEL) {
@@ -82,62 +83,53 @@ $RE{'cfws'}           = qr/$RE{'comment'}|\s+/;
 $RE{'qcontent'}       = qr/$RE{'qtext'}|$RE{'quoted_pair'}/;
 $RE{'quoted_string'}  = qr/$RE{'cfws'}*"$RE{'qcontent'}+"$RE{'cfws'}*/;
 
-# by the spec:
-# word            =   atom / quoted-string   = qr/$RE{'atom'}|$RE{'quoted_string'}/;
-# atom            =   [CFWS] 1*atext [CFWS]  = qr/$RE{'cfws'}*$RE{'atext'}+$RE{'cfws'}*/;
-# with some inlining:
-# word            = qr/$RE{'cfws'}* (?:$RE{'atom'} | "$RE{'qcontent'}+") $RE{'cfws'}*/x;
-# however:
-# phrase          =   1*word / obs-phrase
-# obs-phrase      =   word *(word / "." / CFWS)
-# after combining:
-# phrase          =   word *(word / "." / CFWS)
-
 $RE{'atom'}           = qr/$RE{'cfws'}*$RE{'atext'}+$RE{'cfws'}*/;
-$CRE{'atom'}           = qr/($RE{'cfws'}*)($RE{'atext'}+)($RE{'cfws'}*)/;
 
-$RE{'word'}           = qr/$RE{'cfws'}* (?: $RE{'atom'} |      "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
-$RE{'dword'}          = qr/$RE{'cfws'}* (?: $RE{'atom'} | \. | "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
-$CRE{'dword'}         = qr/($RE{'cfws'}*) (?: ($RE{'atom'} | \.) | "($RE{'qcontent'}+)" ) ($RE{'cfws'}*)/x;
-$RE{'phrase'}         = qr/$RE{'word'} $RE{'dword'}*/x;
-$RE{'display_name'}   = $RE{'phrase'};
+$RE{'word'}           = qr/$RE{'cfws'}* (?: $RE{'atom'} | "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
+$RE{'phrase'}         = qr/$RE{'word'}+/x;
+$RE{'display-name'}   = $RE{'phrase'};
 
 $RE{'dot_atom_text'}  = qr/$RE{'atext'}+(?:\.$RE{'atext'}+)*/;
 $RE{'dot_atom'}       = qr/$RE{'cfws'}*$RE{'dot_atom_text'}$RE{'cfws'}*/;
-$RE{'local_part'}     = qr/$RE{'dot_atom'}|$RE{'quoted_string'}/;
+$RE{'local-part'}     = qr/$RE{'dot_atom'}|$RE{'quoted_string'}/;
 
-$RE{'dtext'}          = qr/[^\[\]\\]/;
 $RE{'dcontent'}       = qr/$RE{'dtext'}|$RE{'quoted_pair'}/;
 $RE{'domain_literal'} = qr/$RE{'cfws'}*\[(?:\s*$RE{'dcontent'})*\s*\]$RE{'cfws'}*/;
 $RE{'domain'}         = qr/$RE{'dot_atom'}|$RE{'domain_literal'}/;
-$CRE{'domain'}        = qr/
-    ($RE{'cfws'}*)
-    ($RE{'dot_atom_text'}|\[(?:\s*$RE{'dcontent'})*\s*\])
-    ($RE{'cfws'}*)
+$RE{'obs-domain'}     = qr/$RE{'atom'}(?:\.$RE{'atom'})*|$RE{'domain_literal'}/;
+
+$RE{'addr-spec'}      = qr/$RE{'local-part'}\@$RE{'domain'}/;
+$RE{'angle-addr'}     = qr/$RE{'cfws'}* < $RE{'addr-spec'} > $RE{'cfws'}*/x;
+
+$RE{'name-addr'}      = qr/$RE{'display-name'}?$RE{'angle-addr'}/;
+$RE{'mailbox'}        = qr/(?:$RE{'name-addr'}|$RE{'addr-spec'})$RE{'comment'}*/;
+
+$CRE{'addr-spec'}      = qr/($RE{'local-part'})\@($RE{'domain'})/;
+$CRE{'mailbox'} = qr/
+    (?:
+        ($RE{'display-name'})?($RE{'cfws'}*)<$CRE{'addr-spec'}>($RE{'cfws'}*)
+        |$CRE{'addr-spec'}
+    )($RE{'comment'}*)
 /x;
 
-$RE{'addr_spec'}      = qr/$RE{'local_part'}\@$RE{'domain'}/;
-$CRE{'addr_spec'}     = qr/
-    ($RE{'cfws'}*)
-    ($RE{'dot_atom_text'}|"$RE{'qcontent'}+")
-    ($RE{'cfws'}*)
-    \@$CRE{'domain'}
-/x;
-$RE{'obs-route'}      = qr/
+$RE{'dword'}            = qr/$RE{'cfws'}* (?: $RE{'atom'} | \. | "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
+$RE{'obs-phrase'}       = qr/$RE{'word'} $RE{'dword'}*/x;
+$RE{'obs-display-name'} = $RE{'obs-phrase'};
+$RE{'obs-route'}        = qr/
     (?:$RE{'cfws'}|,)*
     \@$RE{'domain'}
     (?:,$RE{'cfws'}?(?:\@$RE{'domain'})?)*
     :
 /x;
-$RE{'angle_addr'}     = qr/$RE{'cfws'}* < $RE{'obs-route'}? $RE{'addr_spec'} > $RE{'cfws'}*/x;
-
-$RE{'name_addr'}      = qr/$RE{'display_name'}?$RE{'angle_addr'}/;
-$RE{'mailbox'}        = qr/(?:$RE{'name_addr'}|$RE{'addr_spec'})$RE{'comment'}*/;
-
-$CRE{'mailbox'} = qr/
+$RE{'obs-domain'}       = qr/$RE{'atom'}(?:\.$RE{'atom'})*|$RE{'domain_literal'}/;
+$RE{'obs-local-part'}   = qr/$RE{'word'}(?:\.$RE{'word'})*/;
+$RE{'obs-addr-spec'}    = qr/$RE{'obs-local-part'}\@$RE{'obs-domain'}/;
+$CRE{'obs-addr-spec'}   = qr/($RE{'obs-local-part'})\@($RE{'obs-domain'})/;
+$CRE{'obs-mailbox'} = qr/
     (?:
-        ($RE{'display_name'})?($RE{'cfws'}*)< $RE{'obs-route'}? ($RE{'addr_spec'})>($RE{'cfws'}*)
-        |($RE{'addr_spec'})
+        ($RE{'obs-display-name'})?
+        ($RE{'cfws'}*)< $RE{'obs-route'}? $CRE{'obs-addr-spec'} >($RE{'cfws'}*)
+        |$CRE{'obs-addr-spec'}
     )($RE{'comment'}*)
 /x;
 
@@ -163,7 +155,7 @@ sub parse {
         # group           =   display-name ":" [group-list] ";" [CFWS]
         # group-list      =   mailbox-list / CFWS / obs-group-list
         # obs-group-list  =   1*([CFWS] ",") [CFWS])
-        if ( !$in_group && $line =~ s/^$RE{'display_name'}://o ) {
+        if ( !$in_group && $line =~ s/^$RE{'display-name'}://o ) {
             $in_group = 1; next;
         }
         if ( $in_group && $line =~ s/^;// ) {
@@ -186,6 +178,16 @@ sub parse {
             );
             next;
         }
+        elsif ( $line =~ s/^($CRE{'obs-mailbox'})//o ) {
+            my ($original, $phrase, $user, $host, @comments) = $self->_process_mailbox(
+                $1,$2,$3,$4,$5,$6,$7
+            );
+            push @res, Email::Address->new(
+                $phrase, "$user\@$host", join(' ', grep defined, @comments),
+                $original,
+            );
+            next;
+        }
 
         # if we got here then something unknown on our way
         # try to recorver
@@ -197,50 +199,46 @@ sub parse {
     return @res;
 }
 
+my $dequote = sub {
+    local $_ = shift;
+    s/^"//; s/"$//; s/\\(.)/$1/g;
+    return "$_";
+};
+my $quote = sub {
+    local $_ = shift;
+    s/([\\"])/\\$1/g;
+    return qq{"$_"};
+};
+
 sub _process_mailbox {
-    my $self = $_[0];
-    my ($original, $phrase) = ($_[1],$_[2]);
-    my $address = $_[4] || $_[6];
-    my @rest = ($_[3],$_[5],$_[7]);
+    my $self = shift;
+    my $original = shift;
+    my @rest = (@_);
 
     my @comments;
+    foreach ( grep defined, splice @rest ) {
+        s{ ($RE{'quoted_string'}) | ($RE{comment}) }
+         { $1? $1 : do { push @comments, $2; $comments[-1]=~/^\s|\s$/? ' ' : '' } }xgoe;
+        s/^\s+//; s/\s+$//;
+        next unless length;
 
-    if ( $phrase ) {
-        my @tmp = $phrase =~ /$CRE{'dword'}/go; # must match everything
-        $phrase = '';
-        while ( my ($lcomment, $text, $quoted, $rcomment) = splice @tmp, 0, 4 ) {
-            $phrase .= ' ' if $lcomment =~ /^\s|\s$/ && $phrase !~ /\s$/;
-            push @comments, $lcomment;
-            if (defined $text) {
-                $text =~ s{($RE{'comment'})}{
-                    push @comments, $1; $comments[-1]=~ /^\s|\s$/? ' ':''
-                }xgeo;
-                $text =~ s/\s+/ /g;
-                $phrase .= $text;
-            } else {
-                $quoted =~ s/\\(.)/$1/g;
-                $phrase .= $quoted;
-            }
-            $phrase .= ' ' if $rcomment =~ /^\s|\s$/ && $phrase !~ /\s$/;
-            push @comments, $rcomment;
-        }
+        push @rest, $_;
     }
-    push @comments, shift @rest;
+    my ($host, $user, $phrase) = reverse @rest;
 
-    my ($user, $host);
-    {
-        $address =~ /^$CRE{'addr_spec'}$/;
-        ($user, $host) = ($2, $5);
-        push @comments, $1, $3, $4, $6;
-    }
-    push @comments, splice @rest;
+    # deal with spaces out of quoted strings
+    s{ ($RE{'quoted_string'}) | \s+ }{ $1? $1 : ' ' }xgoe
+        foreach grep defined, $phrase;
+    s{ ($RE{'quoted_string'}) | \s+ }{ $1? $1 : '' }xgoe
+        foreach $user, $host;
 
-    for ( $phrase, $user, $host, @comments ) {
-        next unless defined $_;
-        s/^\s+//;
-        s/\s+$//;
-        $_ = undef unless length $_;
-    }
-    return $original, $phrase, $user, $host, grep defined, @comments;
+    # dequote
+    s{ ($RE{'quoted_string'}) }{ $dequote->($1) }xgoe
+        foreach grep defined, $phrase, $user;
+    $user = $quote->($user) unless $user =~ /^$RE{'dot_atom'}$/;
+
+    @comments = grep length, map { s/^\s+//; s/\s+$//; $_ } grep defined, @comments;
+    return $original, $phrase, $user, $host, @comments;
 }
+
 
