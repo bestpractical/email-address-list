@@ -1,7 +1,6 @@
 use strict; use warnings; use autodie; use lib 'lib/';
 use Email::Address::List;
 
-my $file = 't/data/RFC5233.single.valid.txt';
 foreach my $file (qw(t/data/RFC5233.single.valid.txt t/data/RFC5233.single.obs.txt)) {
     process_file($file);
 }
