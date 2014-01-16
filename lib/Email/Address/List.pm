@@ -177,7 +177,7 @@ $RE{'cfws'}           = qr/$RE{'comment'}|\s+/;
 $RE{'qcontent'}       = qr/$RE{'qtext'}|$RE{'quoted_pair'}/;
 $RE{'quoted-string'}  = qr/$RE{'cfws'}*"$RE{'qcontent'}+"$RE{'cfws'}*/;
 
-$RE{'atom'}           = qr/$RE{'cfws'}*$RE{'atext'}+$RE{'cfws'}*/;
+$RE{'atom'}           = qr/$RE{'cfws'}*$RE{'atext'}++$RE{'cfws'}*/;
 
 $RE{'word'}           = qr/$RE{'cfws'}* (?: $RE{'atom'} | "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
 $RE{'phrase'}         = qr/$RE{'word'}+/x;
