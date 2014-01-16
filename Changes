@@ -1,0 +1,8 @@
+0.02 2014-01-15
+
+ - Prevent a quadratic-time check when the provided string did not
+   contain a valid address
+
+0.01 2012-11-17
+
+ - Initial release

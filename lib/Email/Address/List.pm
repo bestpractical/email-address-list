@@ -2,7 +2,7 @@ use strict; use warnings; use 5.008;
 
 package Email::Address::List;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 use Email::Address;
 
 =head1 NAME
