@@ -9,6 +9,39 @@ use Email::Address;
 
 Email::Address::List - RFC close address list parsing
 
+=head1 SYNOPSIS
+
+    use Email::Address::List;
+
+    my $header = <<'END';
+    Foo Bar <simple@example.com>, (an obsolete comment),,,
+     a group:
+      a . wierd . address @
+      for-real .biz
+     ; invalid thingy, <
+     more@example.com
+     >
+    END
+
+    my @list = Email::Address::List->parse($header);
+    foreach my $e ( @list ) {
+        if ($e->{'type'} eq 'mailbox') {
+            print "an address: ", $e->{'value'}->format ,"\n";
+        }
+        else {
+            print $e->{'type'}, "\n"
+        }
+    }
+
+    # prints:
+    # an address: "Foo Bar" <simple@example.com>
+    # comment
+    # group start
+    # an address: a.wierd.address@forreal.biz
+    # group end
+    # unknown
+    # an address: more@example.com
+
 =head1 DESCRIPTION
 
 Parser for From, To, Cc, Bcc, Reply-To, Sender and
@@ -21,15 +54,18 @@ even mentioned headers and this module is derived work
 from Email::Address.
 
 However, mentioned headers are structured and contain lists
-of addresses. Most of the time you want to parse it from start
-to end keeping every bit even if it's a invalid input.
+of addresses. Most of the time you want to parse such field
+from start to end keeping everything even if it's an invalid
+input.
 
 =head1 METHODS
 
 =head2 parse
 
 A class method that takes a header value (w/o name and :) and
-a set of named options. See below.
+a set of named options, for example:
+
+    my @list = Email::Address::List->parse( $line, option => 1 );
 
 Returns list of hashes. Each hash at least has 'type' key that
 describes the entry. Types:
@@ -352,3 +388,14 @@ sub _process_mailbox {
 }
 
 
+=head1 AUTHOR
+
+Ruslan Zakirov E<lt>ruz@bestpractical.comE<gt>
+
+=head1 LICENSE
+
+Under the same terms as Perl itself.
+
+=cut
+
+1;
