@@ -1,4 +1,6 @@
-use strict; use warnings; use 5.008;
+use strict;
+use warnings;
+use 5.010;
 
 package Email::Address::List;
 
