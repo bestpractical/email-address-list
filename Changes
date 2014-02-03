@@ -1,4 +1,8 @@
-0.03 2013-01-22
+0.04 2014-02-03
+
+ - Update minimum perl version to 5.10, because of use of ++ quantifier
+
+0.03 2014-01-22
 
  - Include documentation updates present in the released version of
    0.01, but never checked into the repository
