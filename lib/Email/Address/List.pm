@@ -18,7 +18,7 @@ Email::Address::List - RFC close address list parsing
     my $header = <<'END';
     Foo Bar <simple@example.com>, (an obsolete comment),,,
      a group:
-      a . wierd . address @
+      a . weird . address @
       for-real .biz
      ; invalid thingy, <
      more@example.com
@@ -39,7 +39,7 @@ Email::Address::List - RFC close address list parsing
     # an address: "Foo Bar" <simple@example.com>
     # comment
     # group start
-    # an address: a.wierd.address@forreal.biz
+    # an address: a.weird.address@forreal.biz
     # group end
     # unknown
     # an address: more@example.com
@@ -110,7 +110,7 @@ Returned when a group ends.
 
 =item comment
 
-Obsolete syntax allows to use standalone comments between mailboxes
+Obsolete syntax allows one to use standalone comments between mailboxes
 that can not be addressed to any mailbox. In such situations a comment
 returned as an entry of this type. Comment itself is under value.
 
