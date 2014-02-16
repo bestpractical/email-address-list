@@ -7,7 +7,7 @@ SYNOPSIS
         my $header = <<'END';
         Foo Bar <simple@example.com>, (an obsolete comment),,,
          a group:
-          a . wierd . address @
+          a . weird . address @
           for-real .biz
          ; invalid thingy, <
          more@example.com
@@ -28,7 +28,7 @@ SYNOPSIS
         # an address: "Foo Bar" <simple@example.com>
         # comment
         # group start
-        # an address: a.wierd.address@forreal.biz
+        # an address: a.weird.address@forreal.biz
         # group end
         # unknown
         # an address: more@example.com
@@ -86,10 +86,10 @@ METHODS
         Returned when a group ends.
 
     comment
-        Obsolete syntax allows to use standalone comments between mailboxes
-        that can not be addressed to any mailbox. In such situations a
-        comment returned as an entry of this type. Comment itself is under
-        value.
+        Obsolete syntax allows one to use standalone comments between
+        mailboxes that can not be addressed to any mailbox. In such
+        situations a comment returned as an entry of this type. Comment
+        itself is under value.
 
     unknown
         Returned if parser met something that shouldn't be there. Parser

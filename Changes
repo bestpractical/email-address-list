@@ -1,3 +1,7 @@
+0.05 2014-02-16
+
+ - Correct typos in documentation; no functionality changes
+
 0.04 2014-02-03
 
  - Update minimum perl version to 5.10, because of use of ++ quantifier
