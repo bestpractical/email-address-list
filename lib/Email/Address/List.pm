@@ -217,7 +217,7 @@ $RE{'quoted-string'}  = qr/$RE{'cfws'}*"$RE{'qcontent'}+"$RE{'cfws'}*/;
 
 $RE{'atom'}           = qr/$RE{'cfws'}*$RE{'atext'}++$RE{'cfws'}*/;
 
-$RE{'word'}           = qr/$RE{'cfws'}* (?: $RE{'atom'} | "$RE{'qcontent'}+" ) $RE{'cfws'}*/x;
+$RE{'word'}           = qr/$RE{'atom'} | $RE{'quoted-string'}/x;
 $RE{'phrase'}         = qr/$RE{'word'}+/x;
 $RE{'display-name'}   = $RE{'phrase'};
 
