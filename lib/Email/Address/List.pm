@@ -213,7 +213,7 @@ for (1 .. $COMMENT_NEST_LEVEL) {
 $RE{'cfws'}           = qr/$RE{'comment'}|\s+/;
 
 $RE{'qcontent'}       = qr/$RE{'qtext'}|$RE{'quoted_pair'}/;
-$RE{'quoted-string'}  = qr/$RE{'cfws'}*"$RE{'qcontent'}+"$RE{'cfws'}*/;
+$RE{'quoted-string'}  = qr/$RE{'cfws'}*"$RE{'qcontent'}*"$RE{'cfws'}*/;
 
 $RE{'atom'}           = qr/$RE{'cfws'}*$RE{'atext'}++$RE{'cfws'}*/;
 
