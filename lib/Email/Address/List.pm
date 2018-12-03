@@ -331,12 +331,12 @@ sub parse {
         # if we got here then something unknown on our way
         # try to recorver
         if ($in_group) {
-            if ( $line =~ s/^([^;,"\)]*(?:(?:$RE{'quoted-string'}|$RE{'comment'})[^;,"\)]*)*)(?=;|,)//o ) {
+            if ( $line =~ s/^([^;,"\)]*+(?:(?:$RE{'quoted-string'}|$RE{'comment'})[^;,"\)]*+)*+)(?=;|,)//o ) {
                 push @res, { type => 'unknown', value => $1 } unless $args{'skip_unknown'};
                 next;
             }
         } else {
-            if ( $line =~ s/^([^,"\)]*(?:(?:$RE{'quoted-string'}|$RE{'comment'})[^,"\)]*)*)(?=,)//o ) {
+            if ( $line =~ s/^([^,"\)]*+(?:(?:$RE{'quoted-string'}|$RE{'comment'})[^,"\)]*+)*+)(?=,)//o ) {
                 push @res, { type => 'unknown', value => $1 } unless $args{'skip_unknown'};
                 next;
             }
