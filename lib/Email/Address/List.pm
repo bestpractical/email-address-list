@@ -244,7 +244,7 @@ $CRE{'mailbox'} = qr/
 /x;
 
 $RE{'dword'}            = qr/$RE{'cfws'} (?: $RE{'atom'} | \. | "$RE{'qcontent'}++" ) $RE{'cfws'}/x;
-$RE{'obs-phrase'}       = qr/$RE{'word'} $RE{'dword'}*/x;
+$RE{'obs-phrase'}       = qr/$RE{'word'} $RE{'dword'}*+/x;
 $RE{'obs-display-name'} = $RE{'obs-phrase'};
 $RE{'obs-route'}        = qr/
     (?:$RE{'cfws'}|,)*
