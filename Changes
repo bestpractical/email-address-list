@@ -1,3 +1,9 @@
+0.06 2019-01-02
+
+ - Fix pathological backtracking for unkown regex
+ - Fix pathological backtracking in obs-phrase(i.e. obs-display-name)
+ - Fix pathological backtracking in cfws, quoted strings
+
 0.05 2014-02-16
 
  - Correct typos in documentation; no functionality changes

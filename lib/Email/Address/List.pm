@@ -4,7 +4,7 @@ use 5.010;
 
 package Email::Address::List;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 use Email::Address;
 
 =head1 NAME
